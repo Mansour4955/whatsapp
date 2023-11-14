@@ -1,13 +1,19 @@
 import "./App.css";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import Login from "./Login";
 const App = () => {
+  const [user, setUser] = useState(null);
   return (
     <div className="m-0 p-0 box-border bg-[#dadbd3] h-screen grid place-items-center">
-      <div className="flex bg-[#ededed] h-[90vh] w-[90vw] shadow-shadowBody -mt-[50px] ">
-        <Sidebar />
-        {/* <Router> */}
+      {!user ? (
+        <Login/>
+      ) : (
+        <div className="flex bg-[#ededed] h-[90vh] w-[90vw] shadow-shadowBody -mt-[50px] ">
+          <Sidebar />
+          {/* <Router> */}
           <Routes>
             <Route path="/" element={<Chat />}></Route>
 
@@ -21,8 +27,9 @@ const App = () => {
 
             <Route path="/rooms/:roomId" element={<Chat />}></Route>
           </Routes>
-        {/* </Router> */}
-      </div>
+          {/* </Router> */}
+        </div>
+      )}
     </div>
   );
 };
