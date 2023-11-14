@@ -4,8 +4,10 @@ import { auth, provider } from "./firebase";
 const Login = () => {
   const signIn = (e) => {
     e.preventDefault();
-    auth.signInWithPopup(provider).then((result) => console.log(result)).catch(error=> alert(error.message))
-    ;
+    auth
+      .signInWithPopup(provider)
+      .then((result) => console.log(result))
+      .catch((error) => alert(error.message));
   };
   return (
     <div className="login bg-[#f8f8f8] h-screen w-full grid place-items-center">
