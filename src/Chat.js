@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -6,21 +6,31 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import MicIcon from "@mui/icons-material/Mic";
 import SendIcon from "@mui/icons-material/Send";
+import { useParams } from "react-router-dom";
+import db from "./firebase";
 
 const Chat = () => {
+  const { roomId } = useParams();
   const [input, setInput] = useState("");
+  const [roomName, setRoomName] = useState("");
   const sendMessage = (e) => {
     e.preventDefault();
     console.log(`you typed > ${input}`);
     setInput("");
   };
-
+useEffect(()=>{
+if (roomId){
+  db.collection('rooms').doc(roomId).onSnapshot(snapshot=> (
+    setRoomName(snapshot.data().name)
+  ))
+}
+},[roomId])
   return (
     <div className="chat flex-[0.65] flex flex-col ">
       <div className="chatHeader py-3 px-5 flex items-center border-b border-b-gray-300">
         <AccountCircleIcon />
         <div className="chatHeaderInfo flex-1 pl-5">
-          <h3 className="font-medium mb-[3px] text-lg">Room name</h3>
+          <h3 className="font-medium mb-[3px] text-lg">{roomName}</h3>
           <p className="text-[gray] ">Last seen at ...</p>
         </div>
         <div className="chatHeaderRight flex justify-between min-w-[100px]">
@@ -35,6 +45,7 @@ const Chat = () => {
           </span>
         </div>
       </div>
+
       <div className="chatBody flex-1 bg-whatsappImg bg-repeat bg-center p-8 ">
         <p
           className={`text-base relative p-[10px] bg-[#ffffff] rounded-[10px] w-fit mb-5 ${
@@ -47,6 +58,7 @@ const Chat = () => {
           <span className="chatTimesTamp text-[10px] ml-[10px]">3:52pm</span>
         </p>
       </div>
+
       <div className="chatFooter flex justify-between items-center h-16 border-t border-t-gray-300 ">
         <span className="p-[10px] text-[gray]">
           <InsertEmoticonIcon />

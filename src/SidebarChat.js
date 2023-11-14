@@ -1,6 +1,7 @@
 import React from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import db from "./firebase";
+import { Link } from "react-router-dom";
 const SidebarChat = ({ addNewChat, name,id }) => {
   const createChat = () => {
     const roomName = prompt("Please enter name for chat");
@@ -11,6 +12,7 @@ const SidebarChat = ({ addNewChat, name,id }) => {
     }
   };
   return !addNewChat ? (
+    <Link to={`/rooms/${id}`}>
     <div className="sidebarChat flex p-5 cursor-pointer border-b border-b-[#f6f6f6] hover:bg-[#ebebeb] duration-100">
       <AccountCircleIcon />
       <div className="sidebarChatInfo ml-4">
@@ -18,6 +20,7 @@ const SidebarChat = ({ addNewChat, name,id }) => {
         <p>Last message...</p>
       </div>
     </div>
+    </Link>
   ) : (
     <div
       onClick={createChat}

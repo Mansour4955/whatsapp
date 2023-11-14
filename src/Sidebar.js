@@ -52,7 +52,7 @@ return ()=> {
           />
         </div>
       </div>
-      <div className="sidebarChats bg-white flex-1">
+      <div className="sidebarChats bg-white flex-1 overflow-y-scroll">
         <SidebarChat addNewChat />
         {
           rooms.map(room => (
