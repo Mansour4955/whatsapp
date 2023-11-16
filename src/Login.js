@@ -1,14 +1,19 @@
 import React from "react";
 import { auth, provider } from "./firebase";
-
+import { useDispatch } from "react-redux";
+import { setUser } from "./redux/msgSlice";
 const Login = () => {
+  const dispatch = useDispatch();
   const signIn = (e) => {
     e.preventDefault();
     auth
       .signInWithPopup(provider)
-      .then((result) => console.log(result))
+      .then((result) => {
+        dispatch(setUser({user: result.user}));
+      })
       .catch((error) => alert(error.message));
   };
+
   return (
     <div className="login bg-[#f8f8f8] h-screen w-full grid place-items-center">
       <div className="loginContainer p-24 text-center bg-white rounded-[10px] shadow-shadowBody">

@@ -9,21 +9,19 @@ import db from "./firebase";
 
 const Sidebar = () => {
   const [rooms, setRooms] = useState([]);
-  useEffect(()=>{
- const unsubscribe = db.collection("rooms").onSnapshot(snapshot => (
-  setRooms(snapshot.docs.map(doc => 
-    ({
-      id: doc.id,
-      data: doc.data(),
-
-    })
-    ))
-)
-);
-return ()=> {
-  unsubscribe()
-};
-  },[])
+  useEffect(() => {
+    const unsubscribe = db.collection("rooms").onSnapshot((snapshot) =>
+      setRooms(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   return (
     <div className="flex-[0.35] flex flex-col">
       <div className="sidebarHeader flex justify-between p-5 border-r border-r-gray-300 items-center">
@@ -54,12 +52,10 @@ return ()=> {
       </div>
       <div className="sidebarChats bg-white flex-1 overflow-y-scroll">
         <SidebarChat addNewChat />
-        {
-          rooms.map(room => (
-            <SidebarChat key={room.id} id={room.id} name={room.data.name} />
-          ))
-        }
-      </div> 
+        {rooms.map((room) => (
+          <SidebarChat key={room.id} id={room.id} name={room.data.name} />
+        ))}
+      </div>
     </div>
   );
 };

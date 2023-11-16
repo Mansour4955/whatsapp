@@ -2,10 +2,18 @@ import "./App.css";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import { Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./Login";
+import { useSelector } from "react-redux";
+
 const App = () => {
+  const userExistence = useSelector(state=> state.message.user)
+
   const [user, setUser] = useState(null);
+  
+  useEffect(()=>{
+    setUser(userExistence)
+  },[userExistence])
   return (
     <div className="m-0 p-0 box-border bg-[#dadbd3] h-screen grid place-items-center">
       {!user ? (
