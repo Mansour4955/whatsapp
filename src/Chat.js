@@ -18,13 +18,18 @@ const Chat = () => {
     console.log(`you typed > ${input}`);
     setInput("");
   };
-useEffect(()=>{
-if (roomId){
-  db.collection('rooms').doc(roomId).onSnapshot(snapshot=> (
-    setRoomName(snapshot.data().name)
-  ))
-}
-},[roomId])
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    if (roomId) {
+      db.collection("rooms")
+        .doc(roomId)
+        .onSnapshot((snapshot) => setRoomName(snapshot.data().name));
+
+        db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot=>(
+          setMessages(snapshot.docs.map(doc => doc.data()))
+        ))
+    }
+  }, [roomId]);
   return (
     <div className="chat flex-[0.65] flex flex-col ">
       <div className="chatHeader py-3 px-5 flex items-center border-b border-b-gray-300">
@@ -47,16 +52,20 @@ if (roomId){
       </div>
 
       <div className="chatBody flex-1 bg-whatsappImg bg-repeat bg-center p-8 ">
-        <p
+        {messages.map(message => (
+          <p
           className={`text-base relative p-[10px] bg-[#ffffff] rounded-[10px] w-fit mb-5 ${
             true && "chatReciever" ? "ml-auto !bg-[#dcf8c6]" : ""
           }`}>
           <span className="chatName absolute -top-4 text-xs font-extrabold">
-            Mansour Amine
+            {message.name}
           </span>
-          Hey Guys
-          <span className="chatTimesTamp text-[10px] ml-[10px]">3:52pm</span>
+         {message.message}
+          <span className="chatTimesTamp text-[10px] ml-[10px]">
+            {new Date(message.timestamp?.toDate()).toUTCString()}</span>
         </p>
+        ))}
+        
       </div>
 
       <div className="chatFooter flex justify-between items-center h-16 border-t border-t-gray-300 ">
