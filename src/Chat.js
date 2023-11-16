@@ -8,14 +8,21 @@ import MicIcon from "@mui/icons-material/Mic";
 import SendIcon from "@mui/icons-material/Send";
 import { useParams } from "react-router-dom";
 import db from "./firebase";
+import { useSelector } from "react-redux";
+import firebase from "firebase/compat/app";
 
 const Chat = () => {
+  const user = useSelector((state) => state.message.user.user);
   const { roomId } = useParams();
   const [input, setInput] = useState("");
   const [roomName, setRoomName] = useState("");
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(`you typed > ${input}`);
+    db.collection("rooms").doc(roomId).collection("messages").add({
+      message: input,
+      name: user.displayName,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
     setInput("");
   };
   const [messages, setMessages] = useState([]);
@@ -25,9 +32,13 @@ const Chat = () => {
         .doc(roomId)
         .onSnapshot((snapshot) => setRoomName(snapshot.data().name));
 
-        db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot=>(
-          setMessages(snapshot.docs.map(doc => doc.data()))
-        ))
+      db.collection("rooms")
+        .doc(roomId)
+        .collection("messages")
+        .orderBy("timestamp", "asc")
+        .onSnapshot((snapshot) =>
+          setMessages(snapshot.docs.map((doc) => doc.data()))
+        );
     }
   }, [roomId]);
   return (
@@ -36,7 +47,12 @@ const Chat = () => {
         <AccountCircleIcon />
         <div className="chatHeaderInfo flex-1 pl-5">
           <h3 className="font-medium mb-[3px] text-lg">{roomName}</h3>
-          <p className="text-[gray] ">Last seen at ...</p>
+          <p className="text-[gray] ">
+            Last seen{" "}
+            {new Date(
+              messages[messages.length - 1]?.timestamp?.toDate()
+            ).toUTCString()}
+          </p>
         </div>
         <div className="chatHeaderRight flex justify-between min-w-[100px]">
           <span className="p-[2px] rounded-full active:bg-gray-300  duration-100">
@@ -52,20 +68,22 @@ const Chat = () => {
       </div>
 
       <div className="chatBody flex-1 bg-whatsappImg bg-repeat bg-center p-8 ">
-        {messages.map(message => (
+        {messages.map((message) => (
           <p
-          className={`text-base relative p-[10px] bg-[#ffffff] rounded-[10px] w-fit mb-5 ${
-            true && "chatReciever" ? "ml-auto !bg-[#dcf8c6]" : ""
-          }`}>
-          <span className="chatName absolute -top-4 text-xs font-extrabold">
-            {message.name}
-          </span>
-         {message.message}
-          <span className="chatTimesTamp text-[10px] ml-[10px]">
-            {new Date(message.timestamp?.toDate()).toUTCString()}</span>
-        </p>
+            className={`text-base relative p-[10px] bg-[#ffffff] rounded-[10px] w-fit mb-5 ${
+              message.name === user.displayName && "chatReciever"
+                ? "ml-auto !bg-[#dcf8c6]"
+                : ""
+            }`}>
+            <span className="chatName absolute -top-4 text-xs font-extrabold">
+              {message.name}
+            </span>
+            {message.message}
+            <span className="chatTimesTamp text-[10px] ml-[10px]">
+              {new Date(message.timestamp?.toDate()).toUTCString()}
+            </span>
+          </p>
         ))}
-        
       </div>
 
       <div className="chatFooter flex justify-between items-center h-16 border-t border-t-gray-300 ">
