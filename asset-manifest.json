@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/whatsapp/static/css/main.eedb29c2.css",
+    "main.js": "/whatsapp/static/js/main.226c1113.js",
+    "index.html": "/whatsapp/index.html",
+    "main.eedb29c2.css.map": "/whatsapp/static/css/main.eedb29c2.css.map",
+    "main.226c1113.js.map": "/whatsapp/static/js/main.226c1113.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.eedb29c2.css",
+    "static/js/main.226c1113.js"
+  ]
+}
