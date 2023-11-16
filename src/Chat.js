@@ -67,7 +67,7 @@ const Chat = () => {
         </div>
       </div>
 
-      <div className="chatBody flex-1 bg-whatsappImg bg-repeat bg-center p-8 ">
+      <div className="chatBody flex-1 bg-whatsappImg bg-repeat bg-center p-8 overflow-y-scroll">
         {messages.map((message) => (
           <p
             className={`text-base relative p-[10px] bg-[#ffffff] rounded-[10px] w-fit mb-5 ${

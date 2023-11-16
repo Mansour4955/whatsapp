@@ -22,7 +22,7 @@ const SidebarChat = ({ addNewChat, name, id }) => {
           setMessages(snapshot.docs.map((doc) => doc.data()))
         );
     }
-  }, []);
+  }, [id]);
   return !addNewChat ? (
     <Link to={`/rooms/${id}`}>
       <div className="sidebarChat flex p-5 cursor-pointer border-b border-b-[#f6f6f6] hover:bg-[#ebebeb] duration-100">
